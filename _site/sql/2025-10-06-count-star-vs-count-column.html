@@ -1,5 +1,197 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-10-06T16:50:23+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">완영 불로그</title><subtitle>kimwanyoung blog
-</subtitle><author><name>kimwanyoung</name></author><entry><title type="html">COUNT(*) vs COUNT(column_name) 완벽 이해하기</title><link href="http://localhost:4000/sql/2025-10-06-count-star-vs-count-column.html" rel="alternate" type="text/html" title="COUNT(*) vs COUNT(column_name) 완벽 이해하기" /><published>2025-10-06T00:00:00+09:00</published><updated>2025-10-06T00:00:00+09:00</updated><id>http://localhost:4000/sql/count-star-vs-count-column</id><content type="html" xml:base="http://localhost:4000/sql/2025-10-06-count-star-vs-count-column.html"><![CDATA[<p>SQL에서 데이터 개수를 세는 <code class="language-plaintext highlighter-rouge">COUNT</code> 함수는 매우 자주 사용되지만, <code class="language-plaintext highlighter-rouge">COUNT(*)</code>와 <code class="language-plaintext highlighter-rouge">COUNT(column_name)</code>의 차이를 정확히 이해하지 못하면 예상치 못한 결과를 마주할 수 있습니다. 이 글에서는 두 방식의 차이점과 내부 동작 원리, 성능까지 깊이 있게 다뤄보겠습니다.</p>
+<!DOCTYPE HTML>
+<html lang="en" >
+    <head><meta charset="UTF-8">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"><title>COUNT(*) vs COUNT(column_name) 완벽 이해하기 · 완영 불로그</title><meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="description" content="kimwanyoung blog
+"><meta name="generator" content="Jekyll (using style of GitBook 3.2.3)"><meta name="author" content="kimwanyoung"><link rel="stylesheet" href="/assets/gitbook/style.css">
+<link rel="stylesheet" href="/assets/gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+<link rel="stylesheet" href="/assets/gitbook/gitbook-plugin-expandable-chapters-small2/expandable-chapters-small.css">
+<link rel="stylesheet" href="/assets/gitbook/gitbook-plugin-fontsettings/website.css">
+<link rel="stylesheet" href="/assets/gitbook/gitbook-plugin-search-pro/search.css">
+<link rel="stylesheet" href="/assets/gitbook/gitbook-plugin-splitter/splitter.css">
+
+<link rel="stylesheet" href="/assets/gitbook/rouge/colorful.css">
+
+<link rel="stylesheet" href="/assets/gitbook/custom.css">
+<link rel="stylesheet" href="/assets/gitbook/custom-local.css">
+
+<meta name="HandheldFriendly" content="true"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon-precomposed" sizes="152x152" href="/assets/gitbook/images/apple-touch-icon-precomposed-152.png">
+<link rel="shortcut icon" href="//assets/gitbook/images/favicon.ico" type="image/x-icon">
+
+
+
+
+            <link rel="prev" href="/" />
+        
+
+        
+    </head>
+    <body>
+        <div class="book"><div class="book-summary">
+    <script type="text/javascript">
+        // Fixes the page links scroll problem on both desktop and mobile browsers
+        function pageScrollToTop(element) {
+            // both mobile and non-mobile
+            $('div.body-inner').animate({scrollTop: 0});
+            $(element).parent().find('li>ul>li').removeClass('active');
+            return true;  // propagate
+        }
+        // Fixes the anchor links scroll problem on mobile browsers
+        function mobilePageScrollToAnchor(element) {
+            $(element).closest('li.chapter').find('ul>li').removeClass('active');
+            $(element).parent().addClass('active');
+            if ($(document).width() <= 1240) {
+                let target = $($(element).attr('href'));
+                if (target.length) {
+                    $('div.body-inner').animate({
+                        scrollTop: target.get(0).offsetTop,
+                    });
+                }
+            }
+            return true;
+        }
+    </script>
+
+    <nav role="navigation">
+        <div id="book-search-input" role="search">
+            <input type="text" placeholder="Type to search" />
+        </div>
+        <div id="book-search-input-link" role="search">
+            <a href="/assets/search.html">Click to Search</a>
+        </div>
+        <ul class="summary">
+            
+            <li class="chapter" data-level="1.1" data-path="">
+            
+                <a href="/" onclick="pageScrollToTop(this)">
+                    완영 불로그
+                </a>
+                
+                    
+                
+            </li>
+
+            <li class="divider"></li>
+
+            <!-- Categories with nested posts -->
+            
+            
+                
+                
+
+                
+                <li class="chapter" data-level="1.1">
+                    <a href="/pages/spring/">
+                        Spring
+                    </a>
+                    
+                </li>
+                
+            
+                
+                
+
+                
+                <li class="chapter" data-level="1.1">
+                    <a href="/pages/sql/">
+                        SQL
+                    </a>
+                    
+                    <ul class="articles">
+                        
+                            
+                            <li class="chapter active" data-level="1.2" data-path="/sql/2025-10-06-count-star-vs-count-column.html">
+                            
+                                <a href="/sql/2025-10-06-count-star-vs-count-column.html" onclick="pageScrollToTop(this)">
+                                    COUNT(*) vs COUNT(column_name) 완벽 이해하기
+                                </a>
+                                
+                                    
+                                        <ul><li><a href="#기본-개념" onclick="mobilePageScrollToAnchor(this)" >기본 개념</a><ul><li><a href="#count" onclick="mobilePageScrollToAnchor(this)" >COUNT(*)</a></li><li><a href="#countcolumn_name" onclick="mobilePageScrollToAnchor(this)" >COUNT(column_name)</a></li></ul></li><li><a href="#실전-예제" onclick="mobilePageScrollToAnchor(this)" >실전 예제</a><ul><li><a href="#쿼리-비교" onclick="mobilePageScrollToAnchor(this)" >쿼리 비교</a></li></ul></li><li><a href="#내부-동작-원리" onclick="mobilePageScrollToAnchor(this)" >내부 동작 원리</a><ul><li><a href="#count-동작-방식" onclick="mobilePageScrollToAnchor(this)" >COUNT(*) 동작 방식</a></li><li><a href="#countcolumn_name-동작-방식" onclick="mobilePageScrollToAnchor(this)" >COUNT(column_name) 동작 방식</a></li></ul></li><li><a href="#성능-차이-분석" onclick="mobilePageScrollToAnchor(this)" >성능 차이 분석</a><ul><li><a href="#innodb-mysql-기준" onclick="mobilePageScrollToAnchor(this)" >InnoDB (MySQL) 기준</a></li><li><a href="#실제-성능-테스트-1000만-건-기준" onclick="mobilePageScrollToAnchor(this)" >실제 성능 테스트 (1,000만 건 기준)</a></li></ul></li><li><a href="#심화-내용" onclick="mobilePageScrollToAnchor(this)" >심화 내용</a><ul><li><a href="#1-where-절과의-상호작용" onclick="mobilePageScrollToAnchor(this)" >1. WHERE 절과의 상호작용</a></li><li><a href="#2-countdistinct-column_name" onclick="mobilePageScrollToAnchor(this)" >2. COUNT(DISTINCT column_name)</a></li><li><a href="#3-null-처리-전략" onclick="mobilePageScrollToAnchor(this)" >3. NULL 처리 전략</a></li><li><a href="#4-파티셔닝-테이블에서의-count" onclick="mobilePageScrollToAnchor(this)" >4. 파티셔닝 테이블에서의 COUNT</a></li></ul></li><li><a href="#dbms별-최적화-차이" onclick="mobilePageScrollToAnchor(this)" >DBMS별 최적화 차이</a><ul><li><a href="#mysqlmariadb" onclick="mobilePageScrollToAnchor(this)" >MySQL/MariaDB</a></li><li><a href="#postgresql" onclick="mobilePageScrollToAnchor(this)" >PostgreSQL</a></li><li><a href="#oracle" onclick="mobilePageScrollToAnchor(this)" >Oracle</a></li></ul></li><li><a href="#실무-best-practices" onclick="mobilePageScrollToAnchor(this)" >실무 Best Practices</a><ul><li><a href="#1-일반적인-행-개수-조회" onclick="mobilePageScrollToAnchor(this)" >1. 일반적인 행 개수 조회</a></li><li><a href="#2-not-null-컬럼-카운트" onclick="mobilePageScrollToAnchor(this)" >2. NOT NULL 컬럼 카운트</a></li><li><a href="#3-null-가능-컬럼-유효-값-개수" onclick="mobilePageScrollToAnchor(this)" >3. NULL 가능 컬럼 유효 값 개수</a></li><li><a href="#4-조건부-카운트" onclick="mobilePageScrollToAnchor(this)" >4. 조건부 카운트</a></li><li><a href="#5-대용량-테이블-최적화" onclick="mobilePageScrollToAnchor(this)" >5. 대용량 테이블 최적화</a></li></ul></li><li><a href="#정리" onclick="mobilePageScrollToAnchor(this)" >정리</a></li><li><a href="#참고-자료" onclick="mobilePageScrollToAnchor(this)" >참고 자료</a></li></ul>
+
+                                    
+                                
+                            </li>
+                        
+                    </ul>
+                    
+                </li>
+                
+            
+                
+                
+
+                
+                <li class="chapter" data-level="1.1">
+                    <a href="/pages/cs/">
+                        CS
+                    </a>
+                    
+                </li>
+                
+            
+                
+                
+
+                
+                <li class="chapter" data-level="1.1">
+                    <a href="/pages/network/">
+                        네트워크
+                    </a>
+                    
+                </li>
+                
+            
+
+            <li class="divider"></li>
+
+            <!-- Other collections (if any) -->
+            
+                
+                    
+                
+                    
+                
+                    
+                        
+                        
+                            
+                            
+                            
+                        
+                    
+                
+            
+        </ul>
+    </nav>
+</div>
+<div class="book-body">
+                <div class="book-header" role="navigation">
+                    <!-- Title -->
+                    <h1>
+                        <i class="fa fa-circle-o-notch fa-spin"></i>
+                        
+                            <a href="." >COUNT(*) vs COUNT(column_name) 완벽 이해하기</a>
+                        
+                    </h1>
+                </div>
+
+                <div class="body-inner"><div class="page-wrapper" tabindex="-1" role="main">
+    
+
+    <div class="page-inner">
+        <div id="book-search-results">
+            <div class="search-noresults">
+                <section class="normal markdown-section">
+                    
+                        <h1 id="/sql/count-star-vs-count-column">COUNT(*) vs COUNT(column_name) 완벽 이해하기</h1>
+                    
+
+                    <p>SQL에서 데이터 개수를 세는 <code class="language-plaintext highlighter-rouge">COUNT</code> 함수는 매우 자주 사용되지만, <code class="language-plaintext highlighter-rouge">COUNT(*)</code>와 <code class="language-plaintext highlighter-rouge">COUNT(column_name)</code>의 차이를 정확히 이해하지 못하면 예상치 못한 결과를 마주할 수 있습니다. 이 글에서는 두 방식의 차이점과 내부 동작 원리, 성능까지 깊이 있게 다뤄보겠습니다.</p>
 
 <hr />
 
@@ -347,4 +539,205 @@
   <li>MySQL Documentation: <a href="https://dev.mysql.com/doc/refman/8.0/en/group-by-optimization.html">Optimizing COUNT() Queries</a></li>
   <li>PostgreSQL Wiki: <a href="https://wiki.postgresql.org/wiki/Count_estimate">Count Estimation</a></li>
   <li>Oracle Performance Tuning Guide</li>
-</ul>]]></content><author><name>kimwanyoung</name></author><category term="SQL" /><summary type="html"><![CDATA[SQL에서 데이터 개수를 세는 COUNT 함수는 매우 자주 사용되지만, COUNT(*)와 COUNT(column_name)의 차이를 정확히 이해하지 못하면 예상치 못한 결과를 마주할 수 있습니다. 이 글에서는 두 방식의 차이점과 내부 동작 원리, 성능까지 깊이 있게 다뤄보겠습니다.]]></summary></entry></feed>
+</ul>
+</section>
+            </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div></div>
+    </div>
+</div>
+
+<!-- introduce mathjax support -->
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ]
+  },
+  svg: {
+    fontCache: 'global'
+  }
+};
+</script>
+<script
+  type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+
+
+<!-- introduce per-page mermaid support -->
+
+
+<!-- introduce mathjax support -->
+<script>
+    function fixes_chrome_anchors() {
+        let chrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+        if (window.location.hash && chrome) {
+            setTimeout(function () {
+                var hash = window.location.hash;
+                window.location.hash = "";
+                window.location.hash = hash;
+            }, 300);
+        }
+    }
+
+    if (document.readyState === "loading") {
+        // Loading hasn't finished yet
+        document.addEventListener("DOMContentLoaded", fixes_chrome_anchors);
+    } else {
+        // `DOMContentLoaded` has already fired
+        fixes_chrome_anchors();
+    }
+</script>
+
+
+                        <a href="/" class="navigation navigation-prev navigation-unique" aria-label="Previous page: 완영 불로그">
+                            <i class="fa fa-angle-left"></i>
+                        </a>
+                    
+
+                    
+                </div>
+            </div>
+
+            <script>
+            var gitbook = gitbook || [];
+            gitbook.push(function() {
+                gitbook.page.hasChanged({
+    "page": {
+        "title": "Introduction",
+        "level": "1.1",
+        "depth": 1,
+        
+        "dir": "ltr"
+    },    "config": {
+        "plugins": ["fontsettings", "highlight", "livereload", "lunr", "search", "sharing", "theme-default", "livereload"],
+        "styles": {
+            "ebook": "styles/ebook.css",
+            "epub": "styles/epub.css",
+            "mobi": "styles/mobi.css",
+            "pdf": "styles/pdf.css",
+            "print": "styles/print.css",
+            "website": "styles/website.css"
+        },
+        "pluginsConfig": {
+            "expandable-chapter-small2": {
+                "articlesExpand": true,
+            },
+            "fontsettings": {
+                "family": "sans",
+                "size": 2,
+                "theme": "white"
+            },
+            "highlight": {},
+            "livereload": {},
+            "lunr": {
+                "ignoreSpecialCharacters": false,
+                "maxIndexSize": 1000000
+            },
+            "search": {},            "sharing": {
+                "facebook": true,
+
+                "google": false,
+
+                "github": true,
+              
+                "github_link": "https://github.com",
+              
+
+                "telegram": false,
+                "telegram_link": "https://t.me",
+
+                "instapaper": false,
+
+                "twitter": true,
+              
+
+                "vk": false,
+
+                "weibo": false,
+
+                "all": ["facebook", "google", "twitter", "weibo", "instapaper", "github", "telegram"]
+            },
+"theme-default": {
+                "showLevel": false,
+                "styles": {
+                    "ebook": "styles/ebook.css",
+                    "epub": "styles/epub.css",
+                    "mobi": "styles/mobi.css",
+                    "pdf": "styles/pdf.css",
+                    "print": "styles/print.css",
+                    "website": "styles/website.css"
+                }
+            },
+        },
+        "theme": "default",
+        "author": "Tao He",
+        "pdf": {
+            "pageNumbers": true,
+            "fontSize": 12,
+            "fontFamily": "Arial",
+            "paperSize": "a4",
+            "chapterMark": "pagebreak",
+            "pageBreaksBefore": "/",
+            "margin": {
+                "right": 62,
+                "left": 62,
+                "top": 56,
+                "bottom": 56
+            }
+        },
+        "structure": {
+            "langs": "LANGS.md",
+            "readme": "README.md",
+        },
+        "variables": {},
+        "title": "완영 불로그",
+        "language": "en",
+        "gitbook": "*"
+    },
+    "file": {
+        "path": "_posts/2025-10-06-count-star-vs-count-column.md",
+        "mtime": "2025-10-06 00:00:00 +0900",
+        "type": "markdown"
+    },
+    "gitbook": {
+        "version": "3.2.3",
+        "time": "2025-10-06 16:50:23 +0900"
+    },
+    "basePath": "",
+    "book": {
+        "language": ""
+    }
+});
+            });
+            </script>
+        </div><script src="/assets/gitbook/gitbook.js"></script>
+<script src="/assets/gitbook/theme.js"></script>
+
+<script src="/assets/gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+<script src="/assets/gitbook/gitbook-plugin-copy-code-button/toggle.js"></script>
+<script src="/assets/gitbook/gitbook-plugin-expandable-chapters-small2/expandable-chapters-small.js"></script>
+<script src="/assets/gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+<script src="/assets/gitbook/gitbook-plugin-search-pro/jquery.mark.min.js"></script>
+<script src="/assets/gitbook/gitbook-plugin-search-pro/search.js"></script>
+<script src="/assets/gitbook/gitbook-plugin-sharing/buttons.js"></script>
+<script src="/assets/gitbook/gitbook-plugin-splitter/splitter.js"></script>
+
+<!--
+<script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+<script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+<script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+<script src="../gitbook/gitbook-plugin-search/search.js"></script>
+-->
+
+<script src="/assets/gitbook/custom.js"></script>
+<script src="/assets/gitbook/custom-local.js"></script>
+
+</body>
+</html>
